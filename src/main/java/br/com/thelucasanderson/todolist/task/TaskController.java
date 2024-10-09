@@ -2,11 +2,14 @@ package br.com.thelucasanderson.todolist.task;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
@@ -17,10 +20,22 @@ public class TaskController {
     private ITaskRepository taskRepository;
 
     @PostMapping("/")
-    public TaskModel create(@RequestBody TaskModel taskModel, HttpServletRequest request) {
+    public ResponseEntity create(@RequestBody TaskModel taskModel, HttpServletRequest request) {
+        var currentDate = LocalDateTime.now();
         var idUser = request.getAttribute("idUser");
+
+        if(currentDate.isAfter(taskModel.getStartAt()) || currentDate.isAfter(taskModel.getEndAt())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro na Data - Precisa ser uma data futura");
+        }
+
+        if(taskModel.getStartAt().isAfter(taskModel.getEndAt())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Data final precisa ser antes da data de inicio");
+        }
+
         taskModel.setUserId((UUID) idUser);
 
-        return this.taskRepository.save(taskModel);
+        var task = this.taskRepository.save(taskModel);
+
+        return ResponseEntity.status(HttpStatus.OK).body(task);
     }
 }
