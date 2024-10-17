@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.thelucasanderson</groupId>
 	<artifactId>todolist</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>todolist</name>
 	<description>First project using Java to build a to do list  </description>
 	<url/>
