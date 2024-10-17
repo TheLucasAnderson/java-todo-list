@@ -50,11 +50,11 @@ public class TaskController {
         var idUser = request.getAttribute("idUser");
 
         if (task == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body('Task não encontrada!');
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Task não encontrada!");
         }
 
         if (!taskModel.getUserId().equals(idUser)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body('Usuário não tem permissão nessa task');
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não tem permissão nessa task");
         }
 
         Utils.copyNonNullProperties(taskModel, task);
